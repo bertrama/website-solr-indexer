@@ -1,0 +1,22 @@
+#!/bin/bash
+
+while /bin/true ; do
+  for filename in ${DATADIR}/*.xml ; do
+    if [ -f "${filename}" ] ; then
+
+      curl -fsS \
+        "${SOLR_URL}/update" \
+        -H 'Content-type: text/xml; charset=utf8' \
+        --data-binary  @- < "${filename}"
+
+      curl -fsS \
+        "${SOLR_URL}/update" \
+        -H 'Content-type: text/xml; charset=utf-8' \
+        --data-binary '<commit/>'
+
+      rm "${filename}"
+    fi
+  done
+  sleep 60
+done
+
